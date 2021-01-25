@@ -1,0 +1,25 @@
+version: "3.8"
+volumes:
+  php-fpm-socket:
+  db-store:
+services:
+  app:
+    build: ./infra/php
+    volumes:
+      - php-fpm-socket:/var/run/php-fpm
+      - ./laravel:/work/laravel
+
+  web:
+    build: ./infra/nginx
+    ports:
+      - 10080:80
+    volumes:
+      - php-fpm-socket:/var/run/php-fpm
+      - ./laravel:/work/laravel
+
+  db:
+    build: ./infra/mysql
+    ports:
+      - 13306:3306
+    volumes:
+      - db-store:/var/lib/mysql
