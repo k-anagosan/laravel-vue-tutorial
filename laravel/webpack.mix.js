@@ -12,6 +12,7 @@ const mix = require("laravel-mix");
  */
 
 mix.browserSync({
+    files: ["resources/js/*.*", "public/**/*.*"],
     proxy: "0.0.0.0:10080",
     open: false
 })
