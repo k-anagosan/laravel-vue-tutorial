@@ -101,8 +101,10 @@ export default {
             console.log(this.loginForm);
             console.log("eee");
         },
-        register() {
-            console.log(this.registerForm);
+        async register() {
+            await this.$store.dispatch("auth/register", this.registerForm);
+
+            this.$router.push("/");
         },
     },
 };
