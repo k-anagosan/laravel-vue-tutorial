@@ -97,12 +97,13 @@ export default {
         };
     },
     methods: {
-        login() {
-            console.log(this.loginForm);
-            console.log("eee");
-        },
         async register() {
             await this.$store.dispatch("auth/register", this.registerForm);
+
+            this.$router.push("/");
+        },
+        async login() {
+            await this.$store.dispatch("auth/login", this.loginForm);
 
             this.$router.push("/");
         },
