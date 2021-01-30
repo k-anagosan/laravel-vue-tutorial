@@ -18,6 +18,18 @@
         </ul>
         <div class="panel" v-show="tab === 1">
             <form class="form" @submit.prevent="login">
+                <div class="errors" v-if="loginErrors">
+                    <ul v-if="loginErrors.email">
+                        <li v-for="msg in loginErrors.email" :key="msg">
+                            {{ msg }}
+                        </li>
+                    </ul>
+                    <ul v-if="loginErrors.password">
+                        <li v-for="msg in loginErrors.password" :key="msg">
+                            {{ msg }}
+                        </li>
+                    </ul>
+                </div>
                 <label for="login-email">Email</label>
                 <input
                     type="text"
@@ -41,6 +53,18 @@
         </div>
         <div class="panel" v-show="tab === 2">
             <form class="form" @submit.prevent="register">
+                <div class="errors" v-if="registerErrors">
+                    <ul v-if="registerErrors.email">
+                        <li v-for="msg in registerErrors.email" :key="msg">
+                            {{ msg }}
+                        </li>
+                    </ul>
+                    <ul v-if="registerErrors.password">
+                        <li v-for="msg in registerErrors.password" :key="msg">
+                            {{ msg }}
+                        </li>
+                    </ul>
+                </div>
                 <label for="username">Name</label>
                 <input
                     type="text,"
@@ -80,6 +104,8 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
+
 export default {
     data() {
         return {
@@ -100,13 +126,31 @@ export default {
         async register() {
             await this.$store.dispatch("auth/register", this.registerForm);
 
-            this.$router.push("/");
+            if (this.apiStatus) {
+                this.$router.push("/");
+            }
         },
         async login() {
             await this.$store.dispatch("auth/login", this.loginForm);
 
-            this.$router.push("/");
+            if (this.apiStatus) {
+                this.$router.push("/");
+            }
         },
+        clearError() {
+            this.$store.commit("auth/setRegisterErrorMessages", null);
+            this.$store.commit("auth/setLoginErrorMessages", null);
+        },
+    },
+    created() {
+        this.clearError();
+    },
+    computed: {
+        ...mapState({
+            apiStatus: state => state.auth.apiStatus,
+            loginErrors: state => state.auth.loginErrorMessages,
+            registerErrors: state => state.auth.registerErrorMessages,
+        }),
     },
 };
 </script>
