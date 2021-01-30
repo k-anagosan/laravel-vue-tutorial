@@ -9,6 +9,7 @@
     </footer>
 </template>
 
+
 <script>
 import { mapState, mapGetters } from "vuex";
 
