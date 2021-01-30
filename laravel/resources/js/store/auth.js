@@ -1,8 +1,10 @@
-import { OK, CREATED } from "../util";
+import { OK, CREATED, UNPROCESSABLE_ENTITY } from "../util";
 
 const state = {
     user: null,
     apiStatus: null,
+    loginErrorMessages: null,
+    registerErrorMessages: null,
 };
 
 const getters = {
@@ -17,6 +19,12 @@ const mutations = {
     setApiStatus(state, status) {
         state.apiStatus = status;
     },
+    setLoginErrorMessages(state, messages) {
+        state.loginErrorMessages = messages;
+    },
+    setRegisterErrorMessages(state, messages) {
+        state.registerErrorMessages = messages;
+    },
 };
 
 const actions = {
@@ -30,7 +38,11 @@ const actions = {
             return false;
         }
         context.commit("setApiStatus", false);
-        context.commit("error/setCode", response.status, { root: true });
+        if (response.status === UNPROCESSABLE_ENTITY) {
+            context.commit("setRegisterErrorMessages", response.data.errors);
+        } else {
+            context.commit("error/setCode", response.status, { root: true });
+        }
     },
     async login(context, data) {
         context.commit("setApiStatus", null);
@@ -43,7 +55,11 @@ const actions = {
         }
 
         context.commit("setApiStatus", false);
-        context.commit("error/setCode", response.status, { root: true });
+        if (response.status === UNPROCESSABLE_ENTITY) {
+            context.commit("setLoginErrorMessages", response.data.errors);
+        } else {
+            context.commit("error/setCode", response.status, { root: true });
+        }
     },
     async logout(context) {
         context.commit("setApiStatus", null);
