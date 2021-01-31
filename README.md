@@ -9,3 +9,4 @@ Laravel と Vue を用いた Todo アプリのリポジトリです
 - Laravel/ui 1.3.0
 - vue 2.6.12
 - mysql 8.0.23
+- circleci
